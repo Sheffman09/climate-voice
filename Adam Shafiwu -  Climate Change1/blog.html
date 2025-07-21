@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Voice - Advocating for Change</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for audio recorder */
+        .audio-recorder {
+            transition: all 0.3s ease;
+        }
+        .audio-recorder.recording {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+        /* Custom animation for donation button */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-green-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-seedling text-2xl"></i>
+                <span class="text-xl font-bold">Climate Voice</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#contribute" class="hover:text-green-200 transition">Contribute</a>
+                <a href="#education" class="hover:text-green-200 transition">Education</a>
+                <a href="#events" class="hover:text-green-200 transition">Events</a>
+                <a href="#donate" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full transition">Donate</a>
+            </div>
+            <button class="md:hidden focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden bg-green-700" id="mobile-menu">
+            <div class="px-4 py-2 flex flex-col space-y-3">
+                <a href="#contribute" class="block py-2 hover:bg-green-600 px-3 rounded">Contribute</a>
+                <a href="#education" class="block py-2 hover:bg-green-600 px-3 rounded">Education</a>
+                <a href="#events" class="block py-2 hover:bg-green-600 px-3 rounded">Events</a>
+                <a href="#donate" class="block py-2 bg-green-600 hover:bg-green-500 px-3 rounded text-center">Donate</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-r from-green-700 to-blue-800 text-white py-20">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Your Voice for Climate Change</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Join our movement. Share your thoughts. Make a difference.</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#contribute" class="bg-white text-green-800 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition">Contribute Now</a>
+                <a href="#donate" class="border-2 border-white hover:bg-white hover:text-green-800 px-8 py-3 rounded-full font-semibold transition">Donate to Plant</a>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-white opacity-10"></div>
+    </header>
+
+    <!-- Contribute Section -->
+    <section id="contribute" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4">Add Your Voice to Our Song</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Contribute a line to our climate change anthem. Share your thoughts through text or record an audio message.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-gray-50 rounded-xl shadow-md overflow-hidden p-6">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Text Contribution -->
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-green-700 mb-4 flex items-center">
+                            <i class="fas fa-keyboard mr-2"></i> Text Contribution
+                        </h3>
+                        <textarea id="text-contribution" class="w-full h-40 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Write your line for the climate change song..."></textarea>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span id="char-count" class="text-sm text-gray-500">0/150 characters</span>
+                            <button id="submit-text" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full transition">Submit</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Audio Contribution -->
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-green-700 mb-4 flex items-center">
+                            <i class="fas fa-microphone mr-2"></i> Audio Contribution
+                        </h3>
+                        <div class="audio-recorder bg-white border border-gray-300 rounded-lg p-6 text-center">
+                            <div id="audio-visualizer" class="h-20 mb-4 flex justify-center items-center">
+                                <div class="w-3 h-3 bg-green-400 rounded-full mx-1"></div>
+                                <div class="w-3 h-3 bg-green-400 rounded-full mx-1"></div>
+                                <div class="w-3 h-3 bg-green-400 rounded-full mx-1"></div>
+                                <div class="w-3 h-3 bg-green-400 rounded-full mx-1"></div>
+                                <div class="w-3 h-3 bg-green-400 rounded-full mx-1"></div>
+                            </div>
+                            <button id="record-button" class="bg-red-500 hover:bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center transition">
+                                <i class="fas fa-microphone text-xl"></i>
+                            </button>
+                            <p id="recording-status" class="mt-2 text-sm text-gray-600">Press to record</p>
+                            <audio id="audio-playback" controls class="mt-4 w-full hidden"></audio>
+                            <button id="submit-audio" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full mt-4 hidden transition">Submit Recording</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Contributions -->
+                <div class="mt-12">
+                    <h3 class="text-xl font-semibold text-green-700 mb-4 flex items-center">
+                        <i class="fas fa-users mr-2"></i> Recent Contributions
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                            <p class="text-gray-800">"The earth is our only home, let's treat it with care before it's gone."</p>
+                            <p class="text-sm text-gray-500 mt-2">- Sarah, 2 hours ago</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                            <div class="flex items-center">
+                                <i class="fas fa-volume-up text-green-600 mr-2"></i>
+                                <audio controls class="w-full max-w-xs">
+                                    <source src="#" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">- Anonymous, 5 hours ago</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                            <p class="text-gray-800">"Future generations deserve clean air and blue skies, act now before it's too late!"</p>
+                            <p class="text-sm text-gray-500 mt-2">- Michael, 1 day ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Updates Section -->
+    <section id="education" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4">Climate Education Updates</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Stay informed with the latest facts, research, and ways to combat climate change.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Update Card 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-105">
+                    <div class="h-48 bg-gradient-to-r from-blue-500 to-green-500 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-green-600 font-semibold">NEW RESEARCH</span>
+                            <span class="text-xs text-gray-500">June 15, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Global CO2 Levels Reach Record High</h3>
+                        <p class="text-gray-600 mb-4">Latest measurements show atmospheric CO2 concentrations have surpassed 420 ppm, the highest in human history.</p>
+                        <a href="#" class="text-green-600 font-semibold hover:underline flex items-center">
+                            <a href="https://www.climate.gov/news-features/understanding-climate/climate-change-atmospheric-carbon-dioxide" style="color: rgb(62, 163, 62);">Read More </a> <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Update Card 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-105">
+                    <div class="h-48 bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center">
+                        <i class="fas fa-solar-panel text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-green-600 font-semibold">SOLUTION SPOTLIGHT</span>
+                            <span class="text-xs text-gray-500">June 10, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Solar Energy Breakthrough</h3>
+                        <p class="text-gray-600 mb-4">New perovskite solar cells achieve 33% efficiency, making renewable energy more accessible than ever before.</p>
+                        <a href="#" class="text-green-600 font-semibold hover:underline flex items-center">
+                            <a href="https://www.weforum.org/stories/2024/10/solar-panel-innovations/" style="color: rgb(62, 163, 62);">Read More</a> <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Update Card 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-105">
+                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i class="fas fa-leaf text-white text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-green-600 font-semibold">ACTION GUIDE</span>
+                            <span class="text-xs text-gray-500">June 5, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">10 Ways to Reduce Your Carbon Footprint</h3>
+                        <p class="text-gray-600 mb-4">Simple changes in your daily life can make a significant impact. Learn how to reduce your environmental impact today.</p>
+                        <a href="#" class="text-green-600 font-semibold hover:underline flex items-center">
+                            <a href="https://www.green.earth/blog/10-easy-ways-to-reduce-your-carbon-footprint" style="color: rgb(62, 163, 62);"> Read More</a> <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold transition">
+                    View All Updates <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-green-800 mb-4">Upcoming Climate Action Events</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Join us in person or virtually to raise awareness and take action against climate change.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Event 1 -->
+                <div class="flex flex-col md:flex-row mb-8 bg-gray-50 rounded-xl overflow-hidden shadow-md">
+                    <div class="md:w-1/3 bg-green-700 text-white p-6 flex flex-col items-center justify-center">
+                        <div class="text-4xl font-bold">00</div>
+                        <div class="text-xl font-semibold">June</div>
+                        <div class="text-sm mt-2">10:00 AM - 2:00 PM</div>
+                    </div>
+                    <div class="md:w-2/3 p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Community Tree Planting Day</h3>
+                        <p class="text-gray-600 mb-4">Join us as we plant 500 native trees in the city park to help combat urban heat islands and improve air quality.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">In-Person</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Family Friendly</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Volunteer</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full text-center transition">coming soon!</a>
+                            <!-- <a href="#" class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-2 rounded-full text-center transition">More Details</a> -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 2 -->
+                <div class="flex flex-col md:flex-row mb-8 bg-gray-50 rounded-xl overflow-hidden shadow-md">
+                    <div class="md:w-1/3 bg-blue-700 text-white p-6 flex flex-col items-center justify-center">
+                        <div class="text-4xl font-bold">00</div>
+                        <div class="text-xl font-semibold">June</div>
+                        <div class="text-sm mt-2">7:00 PM - 8:30 PM</div>
+                    </div>
+                    <div class="md:w-2/3 p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Climate Change Webinar: The Science Behind It</h3>
+                        <p class="text-gray-600 mb-4">Dr. Jane Smith from the National Climate Research Center will explain the latest climate science and answer your questions.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Virtual</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full">Expert Speaker</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full text-center transition">coming soon!</a>
+                            <!-- <a href="#" class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-2 rounded-full text-center transition">More Details</a> -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 3 -->
+                <div class="flex flex-col md:flex-row mb-8 bg-gray-50 rounded-xl overflow-hidden shadow-md">
+                    <div class="md:w-1/3 bg-purple-700 text-white p-6 flex flex-col items-center justify-center">
+                        <div class="text-4xl font-bold">00</div>
+                        <div class="text-xl font-semibold">July</div>
+                        <div class="text-sm mt-2">All Day</div>
+                    </div>
+                    <div class="md:w-2/3 p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Plastic-Free Challenge Week Kickoff</h3>
+                        <p class="text-gray-600 mb-4">Commit to reducing your plastic waste for one week. Join our kickoff event for tips, resources, and community support.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">In-Person</span>
+                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">Challenge</span>
+                            <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full">Sustainable Living</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full text-center transition">coming soon!</a>
+                            <!-- <a href="#" class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-2 rounded-full text-center transition">More Details</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="#" class="inline-block border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-3 rounded-full font-semibold transition">
+                    View All Events <br>coming soon<i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section id="donate" class="py-16 bg-gradient-to-r from-green-700 to-blue-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Help Us Plant the Future</h2>
+                <p class="text-xl mb-8">Every donation helps us plant trees, educate communities, and advocate for climate policies.</p>
+                
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-8 mb-12">
+                    <div class="flex flex-col md:flex-row justify-center gap-6 mb-8">
+                        <!-- Donation Option 1 -->
+                        <div class="bg-white bg-opacity-20 rounded-lg p-6 flex-1 hover:bg-opacity-30 transition cursor-pointer">
+                            <div class="text-4xl font-bold mb-2">$10</div>
+                            <p class="mb-4">Plants 5 trees</p>
+                            <div class="h-1 bg-white bg-opacity-30 mb-4"></div>
+                            <ul class="text-left text-sm space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Digital certificate</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Monthly updates</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Donation Option 2 (Featured) -->
+                        <div class="bg-green-600 rounded-lg p-6 flex-1 transform hover:scale-105 transition cursor-pointer relative">
+                            <div class="absolute -top-3 -right-3 bg-yellow-400 text-green-900 text-xs font-bold px-3 py-1 rounded-full">POPULAR</div>
+                            <div class="text-4xl font-bold mb-2">$25</div>
+                            <p class="mb-4">Plants 15 trees</p>
+                            <div class="h-1 bg-white bg-opacity-30 mb-4"></div>
+                            <ul class="text-left text-sm space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Digital certificate</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Monthly updates</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Seed packet gift</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Donation Option 3 -->
+                        <div class="bg-white bg-opacity-20 rounded-lg p-6 flex-1 hover:bg-opacity-30 transition cursor-pointer">
+                            <div class="text-4xl font-bold mb-2">$50</div>
+                            <p class="mb-4">Plants 30 trees</p>
+                            <div class="h-1 bg-white bg-opacity-30 mb-4"></div>
+                            <ul class="text-left text-sm space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Digital certificate</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Monthly updates</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Seed packet gift</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle mr-2"></i> Personalized map</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Donation -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4">Or give a custom amount</h3>
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <div class="relative w-full sm:w-auto">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300">$</span>
+                                <input type="number" placeholder="Enter amount" class="bg-white bg-opacity-20 border border-white border-opacity-30 rounded-full pl-8 pr-4 py-3 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-white">
+                            </div>
+                            <button class="bg-white text-green-800 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold w-full sm:w-auto transition">
+                                Donate Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Impact Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="text-3xl font-bold mb-2">12,457</div>
+                        <p class="text-sm">Trees Planted</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="text-3xl font-bold mb-2">8,942</div>
+                        <p class="text-sm">People Educated</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="text-3xl font-bold mb-2">327</div>
+                        <p class="text-sm">Events Hosted</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="text-3xl font-bold mb-2">56</div>
+                        <p class="text-sm">Policies Advocated</p>
+                    </div>
+                </div>
+                
+                <!-- Floating donation button -->
+                <div class="fixed bottom-6 right-6 z-50">
+                    <button id="donate-float" class="bg-green-600 hover:bg-green-700 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-xl float-animation transition">
+                        <i class="fas fa-seedling text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-seedling text-2xl text-green-400"></i>
+                        <span class="text-xl font-bold">Climate Voice</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Amplifying voices for climate action through community engagement and education.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Our Mission</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Team</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Partners</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Climate Facts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Action Guides</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Research Papers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Educational Videos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on our work and climate news.</p>
+                    <form class="flex flex-col space-y-3">
+                        <input type="email" placeholder="Your email" class="bg-gray-800 border border-gray-700 rounded px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2023 Climate Voice. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Text contribution character counter
+        const textContribution = document.getElementById('text-contribution');
+        const charCount = document.getElementById('char-count');
+        
+        textContribution.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = `${count}/150 characters`;
+            
+            if (count > 150) {
+                charCount.classList.add('text-red-500');
+                charCount.classList.remove('text-gray-500');
+            } else {
+                charCount.classList.remove('text-red-500');
+                charCount.classList.add('text-gray-500');
+            }
+        });
+
+        // Audio recorder functionality (simulated)
+        const recordButton = document.getElementById('record-button');
+        const recordingStatus = document.getElementById('recording-status');
+        const audioPlayback = document.getElementById('audio-playback');
+        const submitAudio = document.getElementById('submit-audio');
+        const audioRecorder = document.querySelector('.audio-recorder');
+        const audioVisualizer = document.getElementById('audio-visualizer');
+        
+        let isRecording = false;
+        let audioChunks = [];
+        
+        recordButton.addEventListener('click', function() {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                // Start recording (simulated)
+                this.innerHTML = '<i class="fas fa-stop text-xl"></i>';
+                this.classList.remove('bg-red-500', 'hover:bg-red-600');
+                this.classList.add('bg-gray-600', 'hover:bg-gray-700');
+                recordingStatus.textContent = 'Recording...';
+                audioRecorder.classList.add('recording');
+                
+                // Simulate audio visualization
+                animateVisualizer();
+                
+                // After 5 seconds, automatically stop (for demo)
+                setTimeout(stopRecording, 5000);
+            } else {
+                stopRecording();
+            }
+        });
+        
+        function stopRecording() {
+            isRecording = false;
+            recordButton.innerHTML = '<i class="fas fa-microphone text-xl"></i>';
+            recordButton.classList.remove('bg-gray-600', 'hover:bg-gray-700');
+            recordButton.classList.add('bg-red-500', 'hover:bg-red-600');
+            recordingStatus.textContent = 'Press to record';
+            audioRecorder.classList.remove('recording');
+            
+            // Show playback and submit button
+            audioPlayback.classList.remove('hidden');
+            submitAudio.classList.remove('hidden');
+            
+            // Stop visualizer animation
+            clearInterval(visualizerInterval);
+            
+            // Reset visualizer
+            const bars = audioVisualizer.querySelectorAll('div');
+            bars.forEach(bar => {
+                bar.style.height = '0.75rem';
+            });
+        }
+        
+        function animateVisualizer() {
+            const bars = audioVisualizer.querySelectorAll('div');
+            visualizerInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const randomHeight = Math.floor(Math.random() * 40) + 10;
+                    bar.style.height = `${randomHeight}px`;
+                    bar.style.backgroundColor = `hsl(${Math.random() * 60 + 100}, 70%, 60%)`;
+                });
+            }, 100);
+        }
+        
+        // Submit buttons (simulated functionality)
+        document.getElementById('submit-text').addEventListener('click', function() {
+            if (textContribution.value.trim() === '') {
+                alert('Please enter your contribution before submitting.');
+                return;
+            }
+            
+            if (textContribution.value.length > 150) {
+                alert('Your contribution exceeds the 150 character limit. Please shorten it.');
+                return;
+            }
+            
+            alert('Thank you for your text contribution! We appreciate your voice in our climate song.');
+            textContribution.value = '';
+            charCount.textContent = '0/150 characters';
+        });
+        
+        submitAudio.addEventListener('click', function() {
+            alert('Thank you for your audio contribution! Your voice will be part of our climate anthem.');
+            audioPlayback.classList.add('hidden');
+            this.classList.add('hidden');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Floating donate button
+        document.getElementById('donate-float').addEventListener('click', function() {
+            window.scrollTo({
+                top: document.getElementById('donate').offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
