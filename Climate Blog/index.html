@@ -99,7 +99,7 @@
                 <!-- Song Card 3 -->
                 <div class="song-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
                     <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1500382019958-9f5c2fbeb582?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Song Cover" class="w-full h-48 object-cover">
+                        <img src="https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg" alt="Song Cover" class="w-full h-48 object-cover">
                         <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                             <button onclick="playSong('song3')" class="bg-white bg-opacity-90 rounded-full p-4 text-blue-600 hover:bg-opacity-100 transition">
                                 <i class="fas fa-play text-xl"></i>
@@ -280,7 +280,7 @@
                             </div>
                         </div>
                         <button class="mt-8 bg-green-500 text-white font-bold px-6 py-3 rounded-full hover:bg-green-600 transition duration-300">
-                            Get Involved <i class="fas fa-arrow-right ml-2"></i>
+                            Coming soon <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
                     <div class="md:w-1/2 bg-gray-800 flex items-center justify-center p-8">
@@ -378,10 +378,13 @@
                     <h4 class="font-semibold mb-4">Newsletter</h4>
                     <p class="text-gray-400 mb-4">Stay updated with our latest songs and campaigns.</p>
                     <div class="flex">
+                        <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="access_key" value="91014662-eb25-4016-937d-0f8443d3cffe">
                         <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg focus:outline-none text-gray-800 w-full">
                         <button class="bg-blue-600 px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
                             <i class="fas fa-paper-plane"></i>
                         </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -465,9 +468,9 @@
         let currentSongIndex = 0;
         
         const songs = [
-            { id: 'song1', title: 'Our Melting Home', artist: 'Climate Youth Collective', duration: '3:42', cover: 'https://images.unsplash.com/photo-1511671782772-c97d3e27f8b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' },
+            { id: 'song1', title: 'Our Melting Home', artist: 'Climate Youth Collective', duration: '3:42', cover: 'https://images.pexels.com/photos/8564638/pexels-photo-8564638.jpeg?_gl=1*qmit8m*_ga*MTI2OTc0MDI0LjE3NTEwMTc1ODE.*_ga_8JE65Q40S6*czE3NTM3NDEyNjEkbzMkZzEkdDE3NTM3NDEzNjQkajQ2JGwwJGgw' },
             { id: 'song2', title: 'Rising Tides', artist: 'Ocean Guardians', duration: '4:15', cover: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80' },
-            { id: 'song3', title: 'Green Revolution', artist: 'Earth Warriors', duration: '3:28', cover: 'https://images.unsplash.com/photo-1500382019958-9f5c2fbeb582?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' }
+            { id: 'song3', title: 'Green Revolution', artist: 'Earth Warriors', duration: '3:28', cover: 'https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg' }
         ];
         
         // Play a specific song
